@@ -1,6 +1,6 @@
 {
   "name": "dsh-skill-author",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Model-facing skill_manage tool that saves, replaces, or deletes Harness skills at user or project scope.",
   "type": "module",
   "license": "MIT",
@@ -20,7 +20,8 @@
     "locale",
     "icon.svg",
     "README.md",
-    "USAGE.md",
+    "使用说明.md",
+    "Agents.md",
     "LICENSE"
   ],
   "peerDependencies": {

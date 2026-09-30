@@ -44,7 +44,8 @@ pnpm pack   # 产出 dsh-skill-author-<version>.tgz
 
 ## 快速上手 / Quick start
 
-安装后请阅读 **[USAGE.md](USAGE.md)**：内含可直接复制的**系统提示词**（常驻指令），配好之后 agent 才会主动调用 `skill_manage` 沉淀技能；另附三步验证方法与常见问题。
+- **[使用说明.md](使用说明.md)**：安装 → 配置系统提示词 → 三步验证 → 常见问题，三步走完即可用。
+- **[Agents.md](Agents.md)**：配套的常驻系统提示词，整文件内容追加到 `~/.dsh/AGENTS.md`（全局）或工作区 `AGENTS.md`，配好之后 agent 才会主动调用 `skill_manage` 沉淀技能。
 
 ## License
 
