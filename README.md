@@ -39,8 +39,12 @@ git clone <this-repo>
 # 本机试用（不走插件管理器）：在 profile 的 package.json 里
 # dependencies 加 "dsh-skill-author": "file:<本目录绝对路径>"，
 # dsh.profile.bundles 加 "dsh-skill-author"，然后 pnpm install 并重启应用
-pnpm pack   # 产出 dsh-skill-author-1.0.0.tgz
+pnpm pack   # 产出 dsh-skill-author-<version>.tgz
 ```
+
+## 快速上手 / Quick start
+
+安装后请阅读 **[USAGE.md](USAGE.md)**：内含可直接复制的**系统提示词**（常驻指令），配好之后 agent 才会主动调用 `skill_manage` 沉淀技能；另附三步验证方法与常见问题。
 
 ## License
 
