@@ -8,14 +8,16 @@ A DeepSeek Harness plugin that registers the model-facing `skill_manage` tool, s
 
 - `create`：在所选作用域下新建一个技能（已存在则失败）
 - `patch`：整体替换某技能的 SKILL.md 正文（不存在则失败；描述可省略，沿用旧值）
-- `delete`：删除技能，归档到技能根旁边的 `.deleted-skills/<name>-<timestamp>`
+- `delete`：删除技能，归档到技能根旁边的 `.deleted-skills/<name>-<timestamp>-<random>`
 
 作用域：
 
 - `user` — `$DSH_HOME/skills`（默认 `~/.dsh/skills`），本机所有工作区可用
 - `project` — 会话工作区的 git 根下 `.dsh/skills`，仅该仓库可用
 
-工具自己写 YAML frontmatter（name / description / metadata），正文只传 Markdown；技能上限 100 000 字符。文件系统技能提供方监视这些目录，新会话即见新技能。
+frontmatter 由工具管理，但只拥有 `name` / `description` / `metadata` 三个键：patch 时其余键（如 `disable-model-invocation`、`user-invocable`、`whenToUse`）**逐字保留**，调用限制不会被一次 patch 悄悄放宽；省略 `description` 时沿用原有那一行，避免引号/转义漂移。正文只传 Markdown；技能上限 100 000 字符。
+
+写入安全：同一技能的检查到发布按主机进程串行；临时文件随机命名并以独占方式创建；`create` 通过硬链接原子发布（并发 create 恰好一个成功）；技能目录经过 `realpath` 校验，符号链接无法把写入带出技能根。项目根识别按存在性检测 `.git`（目录或 worktree 文件均可，Linux 下 `readFile` 会对 `.git` 目录抛 `EISDIR`）。
 
 ## 环境要求 / Requirements
 
