@@ -1,7 +1,7 @@
 {
   "name": "dsh-skill-author",
-  "version": "1.2.1",
-  "description": "Model-facing skill_manage tool that saves, replaces, or deletes Harness skills at user or project scope.",
+  "version": "1.3.0",
+  "description": "Model-facing skill_manage tool that saves, replaces, or deletes Harness skills at user or project scope, with a standing system-prompt section that asks the model to evaluate skill retention before ending a reusable task.",
   "type": "module",
   "license": "MIT",
   "keywords": [

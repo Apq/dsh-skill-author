@@ -1,14 +1,15 @@
 # dsh-skill-author
 
-DeepSeek Harness 插件：给会话注册模型可调用的 `skill_manage` 工具，让 agent 把跑通的可复用流程保存为 Harness 技能（SKILL.md），或替换、删除已有技能。
+DeepSeek Harness 插件：给会话注册模型可调用的 `skill_manage` 工具，让 agent 把跑通的可复用流程保存为 Harness 技能（SKILL.md），或替换、删除已有技能。从 1.3.0 起还会向系统提示词注入一段常驻的「技能沉淀」自检指令，不再依赖手工追加 AGENTS.md。
 
-A DeepSeek Harness plugin that registers the model-facing `skill_manage` tool, so the agent can save reusable procedures as Harness skills (SKILL.md), or replace / delete existing ones.
+A DeepSeek Harness plugin that registers the model-facing `skill_manage` tool, so the agent can save reusable procedures as Harness skills (SKILL.md), or replace / delete existing ones. Since 1.3.0 it also contributes a standing system-prompt section that asks the model to evaluate skill retention before ending a reusable task, so no manual AGENTS.md edit is required.
 
 ## 它做什么 / What it does
 
 - `create`：在所选作用域下新建一个技能（已存在则失败）
 - `patch`：整体替换某技能的 SKILL.md 正文（不存在则失败；描述可省略，沿用旧值）
 - `delete`：删除技能，归档到技能根旁边的 `.deleted-skills/<name>-<timestamp>-<random>`
+- 系统提示词：1.3.0 起注册常驻 section `skill-author:retention`（order 5500），提示模型在结束一个可复用流程前评估是否沉淀，并要求汇报保存结果；提示服务不可用时自动降级，只保留工具
 
 作用域：
 
@@ -46,8 +47,8 @@ pnpm pack   # 产出 dsh-skill-author-<version>.tgz
 
 ## 快速上手 / Quick start
 
-- **[使用说明.md](使用说明.md)**：安装 → 配置系统提示词 → 三步验证 → 常见问题，三步走完即可用。
-- **[Agents.md](Agents.md)**：配套的常驻系统提示词，整文件内容追加到 `~/.dsh/AGENTS.md`（全局）或工作区 `AGENTS.md`，配好之后 agent 才会主动调用 `skill_manage` 沉淀技能。
+- **[使用说明.md](使用说明.md)**：安装 → 三步验证 → 常见问题，三步走完即可用。
+- **[Agents.md](Agents.md)**：可选的补充常驻指令。1.3.0 起插件已内置等价的沉淀提示；若想让规则更细（例如自定义阈值），仍可把该文件内容追加到 `~/.dsh/AGENTS.md`（全局）或工作区 `AGENTS.md`。
 
 ## License
 

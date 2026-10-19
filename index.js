@@ -27,6 +27,27 @@ export const name = "skill-author";
 export const inject = ["tools"];
 
 /**
+ * Placement after the tool sections (1000-5000) and before harness source
+ * paths (10000): retention guidance is a work habit, not a tool contract.
+ */
+const RETENTION_SECTION_ORDER = 5500;
+
+/**
+ * Standing instruction assembled into every session that loads this plugin.
+ * The tool alone only makes saving possible; this section makes the model
+ * evaluate retention before it ends a turn. Short because every request
+ * carries it.
+ */
+const RETENTION_SECTION = [
+  "Skill retention: before ending a turn that completed a reusable multi-step procedure",
+  "(commands, paths, and checks that actually worked), decide whether to save it with the skill_manage tool.",
+  "Use scope \"user\" for a procedure useful in every workspace and \"project\" for one tied to this repository.",
+  "Do not save one-off tasks, secrets, or a duplicate of a skill already in the catalog; use action \"patch\" to extend one.",
+  "When the user says to remember a procedure, save it immediately.",
+  "Report every skill you create, patch, or delete with its name and scope."
+].join(" ");
+
+/**
  * Save, replace, or delete a skill under the same roots the filesystem
  * provider scans: `<project>/.dsh/skills` and `$DSH_HOME/skills`.
  * @param {import("@deepseek-ai/cordis").Context} ctx
@@ -133,7 +154,29 @@ export function apply(ctx) {
     }
   });
 
+  installRetentionSection(ctx);
   return ctx.tools.register(tool);
+}
+
+/**
+ * Ask the model to evaluate retention before it finishes a turn. The prompt
+ * service is optional here: a profile without it still gets the tool, so a
+ * missing section degrades to the previous behavior instead of failing load.
+ * @param {import("@deepseek-ai/cordis").Context} ctx
+ */
+function installRetentionSection(ctx) {
+  const systemPrompt = typeof ctx.get === "function" ? ctx.get("systemPrompt") : undefined;
+  if (typeof systemPrompt?.section !== "function") return;
+  try {
+    systemPrompt.section({
+      name: "skill-author:retention",
+      order: RETENTION_SECTION_ORDER,
+      text: RETENTION_SECTION
+    });
+  } catch (error) {
+    // A duplicate registration (double load or hot reload) must not remove the tool.
+    ctx.logger?.warn?.(`skill-author: retention section unavailable: ${String(error).slice(0, 160)}`);
+  }
 }
 
 /** Create or replace one skill file without ever clobbering a concurrent writer. */
